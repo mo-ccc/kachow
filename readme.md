@@ -16,3 +16,6 @@ Login:
 Settings:
 ![settings](docs/wireframes/user-edit-page.png)
 ##### email and role is uneditable from this page
+
+Threads:
+![threads](docs/wireframes/threads-page.png)
