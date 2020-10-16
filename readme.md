@@ -19,3 +19,6 @@ Settings:
 
 Threads:
 ![threads](docs/wireframes/threads-page.png)
+
+Single Thread:
+![threads](docs/wireframes/thread.png)
