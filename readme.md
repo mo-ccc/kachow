@@ -9,3 +9,10 @@ Admins will be able to create new users and allocate them roles and teams. Users
 # Wireframes
 Dashboard:
 ![dashboard](docs/wireframes/dashboard.png)
+
+Login:
+![login](docs/wireframes/login-page.png)
+
+Settings:
+![settings](docs/wireframes/user-edit-page.png)
+##### email and role is uneditable from this page
