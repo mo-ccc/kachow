@@ -7,18 +7,25 @@ The page where bugs are submitted will allow comments and collaboration between 
 Admins will be able to create new users and allocate them roles and teams. Users will be able to track their own performance and contributions from their personalised page.
 
 # Wireframes
-Dashboard:
+**Dashboard:**
+Displays graphics related to the number of bugs. Menu options on the left allow the user to access different pages. clicking user profile in top right allows them to edit their settings. Notifications may also be displayed on this page.
 ![dashboard](docs/wireframes/dashboard.png)
 
-Login:
+**Login:**
 ![login](docs/wireframes/login-page.png)
 
-Settings:
+**Settings:**
 ![settings](docs/wireframes/user-edit-page.png)
 ##### email and role is uneditable from this page
 
-Threads:
+**Threads:**
+Page containing all thread elements. the menu buttons filter which threads are displayed.
 ![threads](docs/wireframes/threads-page.png)
 
-Single Thread:
+**Single Thread:**
+Page for viewing a single thread. Posts are made here. at the end of the page a form will take user input to add replies to the thread. replies can contain quote blocks and will notify the replied to.
 ![threads](docs/wireframes/thread.png)
+
+**Admin management page:**
+Page that only the admins can view. Will allow them to create and remove accounts as well as edit roles and details of pre-existing accounts.
+![management](docs/wireframes/admin-member-management-page.png)
