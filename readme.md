@@ -6,6 +6,8 @@ From there users can use the console to access various pages. One of the pages w
 The page where bugs are submitted will allow comments and collaboration between users and attachments are able to be submitted. 
 Admins will be able to create new users and allocate them roles and teams. Users will be able to track their own performance and contributions from their personalised page.
 
+A swagger file is available in the docs folder to document the api.
+
 # Installation instructions
 The app makes use of the venv pip package to create a virtual environment. Therefore the package will need to be installed in order to run the app. There after the install instructions are as below:
 

@@ -1,0 +1,653 @@
+swagger: "2.0"
+info:
+  description: "An api for a kachow web app"
+  version: "1.0.0"
+  title: "Swagger Kachow"
+basePath: "/"
+paths:
+  /user:
+    get:
+      tags:
+      - "users"
+      summary: "Get users"
+      parameters:
+        - in: "query"
+          name: "amount"
+          required: false
+          type: "integer"
+          description: "Specify amount of users returned by the request"
+          default: 10
+        - in: "query"
+          name: "offset"
+          required: false
+          type: "integer"
+          description: "Specify page offset for the request"
+          default: 0
+      responses:
+        "200":
+          description: "OK. Returns an array of users in json"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/user-retrieval-schema"
+        "401":
+          description: "unauthorized request. You must be a user to do that"
+  
+    post:
+      tags:
+      - "users"
+      summary: "Create a user"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Creating a user"
+        required: true
+        schema:
+          $ref: "#/definitions/user-schema"
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "bad request. role must be an integer and 0 or greater"
+        "401":
+          description: "unauthorized request. you must be a higher role than the role you are attempting to create"
+    
+  /user/{id}:
+    get:
+      tags:
+      - "users"
+      summary: "Get a user"
+      parameters:
+      - in: "path"
+        name: "id"
+        required: true
+        type: "integer"
+      responses:
+        "200":
+          description: "returns user json and threads participated in"
+          schema:
+            allOf:
+              - $ref: "#/definitions/user-retrieval-schema"
+            properties:
+              participations:
+                type: "array"
+                items:
+                  $ref: "#/definitions/thread-retrieval-schema"
+        "400":
+          description: "id must be an integer greater than or equal to 0"
+        "404":
+          description: "user not found"
+        "401":
+          description: "unauthorized request. you must be a user to do that"
+
+    put:
+      tags:
+      - "users"
+      summary: "Update a user"
+      parameters:
+      - in: "path"
+        name: "id"
+        required: true
+        type: "integer"
+      - in: "body"
+        name: "body"
+        description: "Update a user"
+        required: true
+        schema:
+          $ref: "#/definitions/user-schema"
+      responses:
+        "200":
+          description: "Request processed"
+        "400":
+          description: "Invalid input. id must be an integer greater than or equal to 0. role must be an integer greater than or equal to 0"
+        "404":
+          description: "User not found"
+        "401":
+          description: "Unauthorized request. you must be of a higher role than the one you are attempting to grant/revoke"
+    
+    delete:
+      tags:
+      - "users"
+      summary: "Delete a user"
+      parameters:
+      - in: "path"
+        name: "id"
+        required: true
+        type: "integer"
+      responses:
+        "404":
+          description: "user not found"
+        "401":
+          description: "Unauthorized request. you must be of a higher role than the target user to do that"
+  
+  /category:
+    get:
+      tags:
+      - "categories"
+      summary: "Get all categories"
+      parameters:
+        - in: "query"
+          name: "amount"
+          required: false
+          type: "integer"
+          description: "Specify amount of categories returned by the request"
+          default: 10
+        - in: "query"
+          name: "offset"
+          required: false
+          type: "integer"
+          description: "Specify page offset for the request."
+          default: 0
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              properties:
+                id:
+                  type: "integer"
+                name:
+                  type: "string"
+        "401":
+          description: "Unauthorized request. You must be a user to do that"
+
+    post:
+      tags:
+      - "categories"
+      summary: "Add a category"
+      parameters:
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            properties:
+              name:
+                type: "string"
+      responses:
+        "200":
+          description: "OK"
+        "401":
+          description: "Unauthorized request. You must be at least a moderator to do that"
+        "400":
+          description: "Bad request. The name of the category must be sent in the body of the request"
+  
+  /category/{id}:
+    get:
+      tags:
+      - "categories"
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          type: "integer"
+        - in: "query"
+          name: "amount"
+          required: false
+          type: "integer"
+          description: "Specify amount of threads returned by the request"
+          default: 10
+        - in: "query"
+          name: "offset"
+          required: false
+          type: "integer"
+          description: "Specify page offset for the request"
+          default: 0
+      responses:
+        "200":
+          description: "success"
+          schema:
+            properties:
+              category-id:
+                type: "integer"
+              category-name:
+                type: "string"
+              threads:
+                type: "array"
+                items:
+                  $ref: "#/definitions/thread-retrieval-schema"
+        "400":
+          description: "bad request. queries and id must be integers greater or equal to 0"
+        "401":
+          description: "Unauthorized request. You must be a user to do that"
+        "404":
+          description: "Category not found."
+    
+    put:
+      tags:
+      - "categories"
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          type: "integer"
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            properties:
+              name:
+                type: "string"
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Bad request. Body must contain a single variable 'name' of type string and id must be an integer greater or equal to 0."
+        "401":
+          description: "Unauthorized request. You must be at least a moderator to do that"
+        "404":
+          description: "Category not found"
+    
+    delete:
+      tags:
+      - "categories"
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          type: "integer"
+        - in: "body"
+          name: "body"
+          required: false
+          schema:
+            properties:
+              force:
+                type: "boolean"
+                default: "false"
+      responses:
+        "200":
+          description: "success"
+        "401":
+          description: "Unauthorized request. You must be at least a moderator to do that"
+        "404":
+          description: "Category not found"
+        "405":
+          description: "If the category contains threads the force boolean must be set to true"
+  
+  /thread:
+    get:
+      tags:
+      - "threads"
+      summary: "Get threads"
+      parameters:
+        - in: "query"
+          name: "amount"
+          required: false
+          type: "integer"
+          description: "Specify amount of threads returned by the request"
+          default: 10
+        - in: "query"
+          name: "offset"
+          required: false
+          type: "integer"
+          description: "Specify page offset for the request"
+          default: 0
+      responses:
+        "200":
+          description: "returns an array of threads"
+          schema:
+            $ref: "#/definitions/thread-retrieval-schema"
+        "400":
+          description: "bad request. queries and id must be integers greater or equal to 0"
+        "401":
+          description: "Unauthorized request. You must be a user to do that"
+  
+    post:
+      tags:
+      - "threads"
+      summary: "Create a new thread"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Creating a thread"
+        required: true
+        schema:
+          $ref: "#/definitions/thread-schema"
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Bad request. Review the thread-schema"
+        "401":
+          description: "Unauthorized request. You must be a user to do that"
+
+  /thread/{id}:
+    get:
+      tags:
+      - "threads"
+      summary: "get a thread and its posts"
+      parameters:
+      - in: "path"
+        name: "id"
+        required: true
+        type: "integer"
+      responses:
+        "200":
+          description: "returns posts in thread"
+          schema:
+            allOf:
+            - $ref: "#/definitions/thread-retrieval-schema"
+            properties:
+              posts:
+                type: "array"
+                items:
+                  $ref: "#/definitions/post-retrieval-schema"
+        "400":
+          description: "bad request. Path id must be an integer greater than or equal to 0"
+        "401":
+          description: "Unauthorized request. You must be a user to do that"
+        "404":
+          description: "thread not found"
+  
+    put:
+      tags:
+      - "threads"
+      summary: "Update an existing thread"
+      parameters:
+      - in: "path"
+        name: "id"
+        required: true
+        type: "integer"
+      - in: "body"
+        name: "body"
+        description: "Thread to update"
+        required: true
+        schema:
+          $ref: "#/definitions/thread-schema"
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Bad request review the thread-schema"
+        "401":
+          description: "Unauthorized request you must be the original author of the thread or at least a moderator"
+        "404":
+          description: "thread not found"
+    
+    delete:
+      tags:
+        - "threads"
+      summary: "delete an existing thread"
+      parameters:
+      - in: "path"
+        name: "id"
+        required: true
+        type: "integer"
+      responses:
+        "200":
+          description: "OK"
+        "404":
+          description: "Thread not found"
+        "401":
+          description: "Unauthorized request you must be the original author of the thread or at least a moderator"
+          
+    post:
+      tags:
+        - "posts"
+      summary: "create a post"
+      parameters:
+      - in: "path"
+        name: "id"
+        required: true
+        type: "integer"
+      - in: "body"
+        name: "body"
+        description: "creating a post"
+        required: true
+        schema:
+          $ref: "#/definitions/post-schema"
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Bad request. Review the post schema"
+        "401":
+          description: "Unauthorized request. You must be a user to do that"
+        "404":
+          description: "Thread not found"
+
+  /post/{id}:
+    put:
+      tags:
+      - "posts"
+      summary: "Update an existing post"
+      parameters:
+      - in: "path"
+        name: "id"
+        required: true
+        type: "integer"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/post-schema"
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Bad request. Review the post schema"
+        "401":
+          description: "Unauthorized request. You must be a user to do that"
+        "404":
+          description: "Thread not found"
+  
+    delete:
+      tags:
+      - "posts"
+      summary: "Delete an existing post"
+      parameters:
+      - in: "path"
+        name: "id"
+        required: true
+        type: "integer"
+      responses:
+        "200":
+          description: "OK"
+        "401":
+          description: "Unauthorized request. You must be a user to do that"
+        "404":
+          description: "Thread not found"
+  
+  /attachments:
+    post:
+      tags:
+      - "attachments"
+      summary: "Add an attachment"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/attachment-schema"
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "bad request. attachment not supported. must be a pdf/image"
+        "401":
+          description: "Unauthorized request. You must be a user to do that"
+          
+  /attachments/{id}:
+    get:
+      tags:
+      - "attachments"
+      summary: "Get an attachment"
+      parameters:
+      - in: "path"
+        name: "id"
+        required: true
+        type: "integer"
+      responses:
+        "200":
+          description: "success"
+          schema:
+            $ref: "#/definitions/attachment-retrieval-schema"
+        "401":
+          description: "Unauthorized request. You must be a user to do that"
+        "404":
+          description: "Attachment not found"
+            
+    delete:
+      tags:
+      - "attachments"
+      summary: "Delete an attachment"
+      parameters:
+      - in: "path"
+        name: "id"
+        required: true
+        type: "integer"
+      responses:
+        "200":
+          description: "success"
+        "401":
+          description: "Unauthorized request. You must be a user to do that"
+        "404":
+          description: "Attachment not found"
+          
+  /mentions:
+    post:
+      tags:
+      - "misc"
+      summary: "Add a mention"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          properties:
+            mentioned-id:
+              type: "integer"
+      responses:
+        "200":
+          description: "success"
+        "400":
+          description: "Bad request mention-id does not correspond to a user"
+        "401":
+          description: "Unauthorized request. You must be a user to do that"
+  /dashboard:
+    get:
+      tags:
+      - "misc"
+      summary: "Dashboard for a user"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            properties:
+              totals:
+                $ref: "#/definitions/dash-schema"
+              this-month:
+                $ref: "#/definitions/dash-schema"
+              graph:
+                type: "array"
+                items:
+                  allOf:
+                    - $ref: "#/definitions/dash-schema"
+                  properties:
+                    month:
+                      type: "integer"
+                    year:
+                      type: "integer"
+    
+definitions:
+  thread-schema:
+    type: "object"
+    required:
+    - "category"
+    - "title"
+    - "status"
+    properties:
+      category:
+        type: "integer"
+      title:
+        type: "string"
+        example: "Null pointer exception on scanner"
+      status:
+        type: "integer"
+        description: "Defines whether thread is open/closed/in-progress"
+        enum:
+            - 0 # open
+            - 1 # closed
+            - 2 # in progress
+  
+  thread-retrieval-schema:
+    properties:
+      author:
+        type: "integer"
+      time-stamp:
+        type: "string"
+      last-updated:
+        type: "string"
+    allOf:
+      - $ref: "#/definitions/thread-schema"
+            
+  user-schema:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+      email:
+        type: "string"
+      fname:
+        type: "string"
+      lname:
+        type: "string"
+      role:
+        type: "integer"
+        description: "Role defines what permisions a user has"
+        enum:
+        - 0 # administrator
+        - 1 # moderator
+        - 2 # manager
+        - 3 # user
+  
+  user-retrieval-schema:
+    properties:
+      id:
+        type: "integer"
+    allOf:
+      - $ref: "#/definitions/user-schema"
+        
+  post-schema:
+    type: "object"
+    properties:
+      content:
+        type: "string"
+      reply-to:
+        type: "integer" # integer of post-id
+  
+  post-retrieval-schema:
+    properties:
+      author:
+        type: "string"
+      timestamp:
+        type: "string"
+    allOf:
+      - $ref: "#/definitions/post-schema"
+      
+  attachment-schema:
+    properties:
+      content:
+        type: "string"
+        format: "binary"
+      post-position:
+        type: "integer"
+        
+  attachment-retrieval-schema:
+    properties:
+      post-id:
+        type: "integer"
+      post-position:
+        type: "integer"
+      content:
+        type: "string"
+        format: "binary"
+        
+  dash-schema:
+    properties:
+      open:
+        type: "integer"
+      closed:
+        type: "integer"
+      in-progress:
+        type: "integer"
