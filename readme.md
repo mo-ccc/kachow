@@ -43,5 +43,8 @@ Page for viewing a single thread. Posts are made here. at the end of the page a 
 Page that only the admins can view. Will allow them to create and remove accounts as well as edit roles and details of pre-existing accounts.
 ![management](docs/wireframes/admin-member-management-page.png)
 
-# Class Diagrams (WIP)
+# Class Diagram
 ![cd](docs/class_diagram.png)
+
+The dbdiagram is accessible from this link.
+https://dbdiagram.io/d/5fa4f1853a78976d7b7ac333
