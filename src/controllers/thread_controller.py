@@ -4,15 +4,15 @@ from models.Thread import Thread
 from schemas.Thread_Schema import thread_schema, threads_schema
 from sqlalchemy import func
 
-thread = flask.Blueprint('thread', __name__, url_prefix='/threads')
+threads = flask.Blueprint('thread', __name__, url_prefix='/threads')
 
-@thread.route('/', methods=['GET'])
+@threads.route('/', methods=['GET'])
 def get_threads():
     all_threads = Thread.query.all()
     output = threads_schema.dump(all_threads)
     return flask.jsonify(output)
     
-@thread.route('/', methods=['POST'])
+@threads.route('/', methods=['POST'])
 def create_thread():
     response = flask.request.json
     data = thread_schema.load(response)
@@ -26,3 +26,6 @@ def create_thread():
     db.session.commit()
     return flask.jsonify(threads_schema.dump(Thread.query.all()))
     
+@threads.route('/<thread_id>', methods=['GET'])
+def get_thread(thread_id):
+    return 'work in progress'

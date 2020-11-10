@@ -557,7 +557,9 @@ definitions:
     - "title"
     - "status"
     properties:
-      category:
+      category_id:
+        type: "integer"
+      author_id:
         type: "integer"
       title:
         type: "string"
@@ -572,8 +574,6 @@ definitions:
   
   thread-retrieval-schema:
     properties:
-      author:
-        type: "integer"
       time-stamp:
         type: "string"
       last-updated:
@@ -611,6 +611,8 @@ definitions:
   post-schema:
     type: "object"
     properties:
+      author_id:
+        type: "string"
       content:
         type: "string"
       reply-to:
@@ -618,8 +620,6 @@ definitions:
   
   post-retrieval-schema:
     properties:
-      author:
-        type: "string"
       timestamp:
         type: "string"
     allOf:
@@ -637,11 +637,8 @@ definitions:
     properties:
       post-id:
         type: "integer"
-      post-position:
-        type: "integer"
-      content:
-        type: "string"
-        format: "binary"
+    allOf:
+      - $ref: "#/definitions/attachment-schema"
         
   dash-schema:
     properties:
