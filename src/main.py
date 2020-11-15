@@ -19,6 +19,9 @@ def create_app():
     from controllers import blueprints
     for bp in blueprints:
         app.register_blueprint(bp)
+        
+    import commands
+    app.register_blueprint(commands.command_db)
     
     return app
 
