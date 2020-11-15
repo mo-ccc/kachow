@@ -25,4 +25,4 @@ jobs:
         
       - name: unittest
         run: |
-          python -m unittest discover src/tests/
+          python -m unittest discover src/
