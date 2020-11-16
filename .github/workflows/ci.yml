@@ -34,11 +34,9 @@ jobs:
           python -m pip install --upgrade pip
           if [ src/requirements.txt ]; then pip install -r src/requirements.txt; fi
           
-      - name: setup environment variables for psycopg2
-        run: echo $DB_URI
+      - name: setup environment variables for psycopg2 and run unittest
+        run: |
+          echo $DB_URI
+          python -m unittest discover src/
         env:
           DB_URI: postgresql+psycopg2://postgres:postgres@postgres:5432/postgres
-        
-      - name: unittest
-        run: |
-          python -m unittest discover src/
