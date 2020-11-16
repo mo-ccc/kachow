@@ -19,7 +19,7 @@ def seed_db():
     from models.Thread import Thread
     from models.Post import Post
     
-    for x in range(10):
+    for x in range(1, 11):
         new_thread = Thread()
         new_thread.title = f"thread {x}"
         new_thread.status = random.randint(0, 2)

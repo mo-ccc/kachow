@@ -20,8 +20,42 @@ class test_endpoints(unittest.TestCase):
         db.create_all()
         cls.app_context.pop()
         
-    def test_root(self):
+    def test_get(self):
         response = self.client.get('/threads/')
         data = response.get_json()
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(data, list)
+        
+    def test_post(self):
+        response = self.client.get('/threads/')
+        initial = len(response.get_json())
+        response = self.client.post('/threads/', 
+                                    json={
+                                        "author_id":0,
+                                        "category_id":1,
+                                        "title":"post thread",
+                                        "status":1
+                                    })
+        self.assertEqual(response.status_code, 200)
+        response = self.client.get('/threads/11')
+        thread_title = response.get_json()["thread_info"]["title"]
+        self.assertEqual(thread_title,  "post thread")
+        
+    def test_put(self):
+        response = self.client.patch('/threads/2', 
+                                   json={
+                                       "category_id":1,
+                                       "title":"put thread",
+                                       "status":1
+                                   })
+        self.assertEqual(response.status_code, 200)
+        response = self.client.get('/threads/2')
+        thread_title = response.get_json()["thread_info"]["title"]
+        self.assertEqual(thread_title, "put thread")
+
+    def test_delete(self):
+        response = self.client.delete('/threads/1')
+        self.assertEqual(response.status_code, 200)
+        response = self.client.get('/threads/1')
+        self.assertEqual(response.status_code, 404)
+        
