@@ -18,10 +18,28 @@ def drop_db():
 def seed_db():
     from models.Thread import Thread
     from models.Post import Post
+    from models.User import User
+    from main import bcrypt
+    
+    users = []
+    
+    for x in range(1, 5):
+        new_user = User()
+        new_user.username = f"test_user{x}"
+        new_user.email = f"test{x}@test.com"
+        new_user.fname = "first"
+        new_user.lname = "last"
+        new_user.role = 2
+        new_user.password = bcrypt.generate_password_hash("123456").decode('utf-8')
+        db.session.add(new_user)
+        users.append(new_user)
+    db.session.commit()
     
     for x in range(1, 11):
         new_thread = Thread()
         new_thread.title = f"thread {x}"
+        new_thread.author_id = random.choice(users)
+        new_thread.category_id = 1
         new_thread.status = random.randint(0, 2)
         db.session.add(new_thread)
     db.session.commit()

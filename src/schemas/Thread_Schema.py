@@ -5,5 +5,5 @@ class ThreadSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Thread
 
-thread_schema = ThreadSchema()
+thread_schema = ThreadSchema(dump_only=("author_id", "time_created"))
 threads_schema = ThreadSchema(many=True)

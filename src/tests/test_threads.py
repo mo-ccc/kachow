@@ -14,6 +14,11 @@ class test_endpoints(unittest.TestCase):
         runner = cls.app.test_cli_runner()
         runner.invoke(args=["db", "seed"])
         
+        response = self.client.post('/auth/login',
+                                    json={"email":"test0@test.com",
+                                          "password":"123456"})
+        cls.token = response.get_json()
+        
     def tearDown(cls):
         db.session.remove()
         db.drop_all()
@@ -21,7 +26,8 @@ class test_endpoints(unittest.TestCase):
         cls.app_context.pop()
         
     def test_get(self):
-        response = self.client.get('/threads/')
+        response = self.client.get('/threads/',
+                                   headers={"Authorization":f"Bearer {self.token}"})
         data = response.get_json()
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(data, list)

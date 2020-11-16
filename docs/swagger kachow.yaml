@@ -5,7 +5,7 @@ info:
   title: "Swagger Kachow"
 basePath: "/"
 paths:
-  /user:
+  /users:
     get:
       tags:
       - "users"
@@ -52,7 +52,7 @@ paths:
         "401":
           description: "unauthorized request. you must be a higher role than the role you are attempting to create"
     
-  /user/{id}:
+  /users/{id}:
     get:
       tags:
       - "users"
@@ -479,9 +479,7 @@ paths:
         type: "integer"
       responses:
         "200":
-          description: "success"
-          schema:
-            $ref: "#/definitions/attachment-retrieval-schema"
+          description: "image"
         "401":
           description: "Unauthorized request. You must be a user to do that"
         "404":
@@ -559,8 +557,6 @@ definitions:
     properties:
       category_id:
         type: "integer"
-      author_id:
-        type: "integer"
       title:
         type: "string"
         example: "Null pointer exception on scanner"
@@ -574,8 +570,10 @@ definitions:
   
   thread-retrieval-schema:
     properties:
-      time-stamp:
+      timestamp:
         type: "string"
+      author_id:
+        type: "integer"
       last-updated:
         type: "string"
     allOf:
@@ -611,34 +609,29 @@ definitions:
   post-schema:
     type: "object"
     properties:
-      author_id:
-        type: "string"
       content:
         type: "string"
-      reply-to:
+      reply_post_id:
         type: "integer" # integer of post-id
   
   post-retrieval-schema:
     properties:
       timestamp:
         type: "string"
+      author_id:
+        type: "integer"
     allOf:
       - $ref: "#/definitions/post-schema"
       
   attachment-schema:
     properties:
+      post_id:
+        type: "integer"
       content:
         type: "string"
         format: "binary"
       post-position:
         type: "integer"
-        
-  attachment-retrieval-schema:
-    properties:
-      post-id:
-        type: "integer"
-    allOf:
-      - $ref: "#/definitions/attachment-schema"
         
   dash-schema:
     properties:
