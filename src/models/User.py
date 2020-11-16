@@ -4,10 +4,10 @@ class User(db.Model):
     __tablename__ = "users"
 
     user_id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String())
-    fname = db.Column(db.String())
-    lname = db.Column(db.String())
-    role = db.Column(db.SmallInteger)
-    pfp = db.Column(db.String())
-    enc_pass = db.Column(db.String())
+    username = db.Column(db.String(), nullable=False)
+    email = db.Column(db.String(), nullable=False)
+    fname = db.Column(db.String(), nullable=False)
+    lname = db.Column(db.String(), nullable=False)
+    role = db.Column(db.SmallInteger, nullable=False)
+    password = db.Column(db.String(), nullable=False)
     

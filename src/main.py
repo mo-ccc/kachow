@@ -5,6 +5,13 @@ db = SQLAlchemy()
 from flask_marshmallow import Marshmallow
 ma = Marshmallow()
 
+# initialize bcrypt
+from flask_bcrypt import Bcrypt
+bcrypt = Bcrypt()
+
+from flask_jwt_extended import JWTManager
+jwt = JWTManager()
+
 def create_app():
     # setup flask
     from flask import Flask
@@ -14,6 +21,8 @@ def create_app():
     # initialize app using globals
     db.init_app(app)
     ma.init_app(app)
+    bcrypt.init_app(app)
+    jwt.init_app(app)
 
     # register blueprints
     from controllers import blueprints

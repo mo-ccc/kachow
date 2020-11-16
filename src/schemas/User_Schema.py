@@ -4,6 +4,7 @@ from models.User import User
 class UserSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = User
+        load_only = ("password",)
 
-User_schema = UserSchema()
-Users_schema = UserSchema(many=True)
+user_schema = UserSchema()
+users_schema = UserSchema(many=True)
