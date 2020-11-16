@@ -9,19 +9,34 @@ jobs:
   test-suite:
     runs-on: ubuntu-latest
     
+    services:
+      postgres:
+        image: postgres
+      env:
+        POSTGRES_PASSWORD: postgrs
+      options: >-
+        --health-cmd pg_isready
+        --health-interval 10s
+        --health-timeout 5s
+        --health-retries 2
+    
     steps:
       - name: checkout
         uses: actions/checkout@v2
 
       - name: setup python v3.8
         uses: actions/setup-python@v2
-
         with:
           python-version: 3.8
+
       - name: install dependencies
         run: |
           python -m pip install --upgrade pip
           if [ src/requirements.txt ]; then pip install -r src/requirements.txt; fi
+          
+      - name: setup environment variables for psycopg2
+        env:
+          DB_URI: postgresql+psycopg2://postgres:postgres@postgres:5432/postgres
         
       - name: unittest
         run: |
