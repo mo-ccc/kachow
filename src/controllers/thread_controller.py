@@ -5,6 +5,7 @@ from models.Post import Post
 from models.User import User
 from schemas.Thread_Schema import thread_schema, threads_schema
 from schemas.Post_Schema import post_schema, posts_schema
+from services import auth_service
 from sqlalchemy import func
 import flask_jwt_extended
 
@@ -53,18 +54,15 @@ def get_thread(thread_id):
     
 @threads.route('/<thread_id>', methods=['PUT', 'PATCH'])
 @flask_jwt_extended.jwt_required
-def modify_thread(thread_id):
-    jwt_id = flask_jwt_extended.get_jwt_identity()
-    user = User.query.filter_by(user_id=jwt_id).first()
-    if not user:
-        return flask.abort(400, description='Not a valid user')
-        
+@auth_service.verify_user
+# jwt_user is passed from the verify_user decorator
+def modify_thread(thread_id, jwt_user):
     response = flask.request.json
     data = thread_schema.load(response)
     thread = Thread.query.filter_by(thread_id=thread_id).first_or_404()
     
     # permissions check
-    if user.user_id != thread.author_id and user.role > 1:
+    if jwt_user.user_id != thread.author_id and user.role > 1:
         return flask.abort(400, description='You do not have permissions to do this')
  
     thread.title = data["title"]
@@ -75,8 +73,12 @@ def modify_thread(thread_id):
     
 @threads.route('/<thread_id>', methods=['DELETE'])
 @flask_jwt_extended.jwt_required
-def delete_thread(thread_id):
+@auth_service.verify_user
+def delete_thread(thread_id, jwt_user):
     thread = Thread.query.filter_by(thread_id=thread_id).first_or_404()
+    posts_in_thread = Post.query.filter_by(thread_id=thread_id).all()
+    if jwt_user.role > 1 and len(posts_in_thread) > 0:
+        return flask.abort(400, description='You do not have valid permissions to do this')
     posts = Post.query.filter_by(thread_id=thread_id).all()
     for p in posts:
         db.session.delete(p)
