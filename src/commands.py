@@ -1,6 +1,7 @@
 import flask
 from main import db
 import random
+import sqlalchemy
 
 command_db = flask.Blueprint('db', __name__)
 
@@ -38,8 +39,10 @@ def seed_db():
     for x in range(1, 11):
         new_thread = Thread()
         new_thread.title = f"thread {x}"
-        new_thread.author_id = random.choice(users)
+        new_thread.author_id = random.choice(users).user_id
         new_thread.category_id = 1
         new_thread.status = random.randint(0, 2)
+        new_thread.time_created = sqlalchemy.func.now()
         db.session.add(new_thread)
     db.session.commit()
+    print("tables seeded")

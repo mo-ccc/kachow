@@ -55,7 +55,7 @@ def get_thread(thread_id):
 @flask_jwt_extended.jwt_required
 def modify_thread(thread_id):
     jwt_id = flask_jwt_extended.get_jwt_identity()
-    user = User.query.filter_by(user_id=jwt_id)
+    user = User.query.filter_by(user_id=jwt_id).first()
     if not user:
         return flask.abort(400, description='Not a valid user')
         
@@ -64,14 +64,14 @@ def modify_thread(thread_id):
     thread = Thread.query.filter_by(thread_id=thread_id).first_or_404()
     
     # permissions check
-    if user.id != thread.author_id or user.role > 1:
+    if user.user_id != thread.author_id and user.role > 1:
         return flask.abort(400, description='You do not have permissions to do this')
  
     thread.title = data["title"]
     thread.status = data["status"]
     thread.category_id = data["category_id"]
     db.session.commit()
-    return 'ok'
+    return flask.jsonify(thread_schema.dump(thread))
     
 @threads.route('/<thread_id>', methods=['DELETE'])
 @flask_jwt_extended.jwt_required
