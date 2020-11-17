@@ -16,8 +16,7 @@ def login():
     # get the user with the matching email
     user = User.query.filter_by(email=fields["email"]).first()
     # if the user doesn't exist and password doesn't match abort
-    valid_pass = bcrypt.check_password_hash(user.password, fields["password"])
-    if not user or not valid_pass:
+    if not user or not bcrypt.check_password_hash(user.password, fields["password"]):
         return flask.abort(400, description='invalid credentials')
     
     # return an access token with expiry time of 1 day
