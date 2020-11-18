@@ -1,8 +1,9 @@
 from main import db
 
-class Thread(db.Model):
+class Attachment(db.Model):
     __tablename__ = "attachments"
-
-    attachment_path = db.Column(db.String(), unique=True)
-    post_id = db.Column(db.Integer)
-    post_position = db.Column(db.Integer)
+    
+    attachment_id = db.Column(db.Integer, primary_key=True)
+    attachment_path = db.Column(db.String(), unique=True, nullable=False)
+    post_id = db.Column(db.Integer, nullable=False)
+    post_position = db.Column(db.Integer, nullable=False)

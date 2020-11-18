@@ -4,9 +4,21 @@ import os
 load_dotenv()
 
 class Config(object):
-    SQLALCHEMY_DATABASE_URI = os.getenv("DB_URI")
+    @property
+    def SQLALCHEMY_DATABASE_URI(self):
+        value = os.getenv("DB_URI")
+        if not value:
+            raise ValueError("no DB_URI environnment variable")
+        return value
+    
+    @property
+    def JWT_SECRET_KEY(self):
+        value = os.getenv("SECRET_KEY")
+        if not value:
+            raise ValueError("no SECRET_KEY environnment variable")
+        return value
+
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    JWT_SECRET_KEY = os.getenv("SECRET_KEY")
     
 class ProductionConfig(Config):
     pass
