@@ -1,7 +1,11 @@
 import flask
 from main import db
 from models.Attachment import Attachment
+from models.Post import Post
+from models.User import User
 from schemas.Attachment_Schema import attachment_schema
+import flask_jwt_extended
+from services import auth_service
 from pathlib import Path
 import json
 import os
@@ -10,7 +14,9 @@ import uuid
 attachments = flask.Blueprint('attachments', __name__, url_prefix='/attachments')
 
 @attachments.route('/', methods=['POST'])
-def create_attachment():
+@flask_jwt_extended.jwt_required
+@auth_service.verify_user
+def create_attachment(jwt_user):
     response = flask.request.form["json"]
     jresponse = json.loads(response)
     
@@ -19,6 +25,9 @@ def create_attachment():
         return flask.abort(400, description="no file in body")
     file = flask.request.files['file']
     extension = Path(file.filename).suffix
+    post = Post.query.get(data["post_id"])
+    if post.author_id != jwt_user.user_id:
+        return flask.abort(400, description="you do not own this post")
     
     unique_id = uuid.uuid4()
     file_location = f'att_files/{unique_id}{extension}'
