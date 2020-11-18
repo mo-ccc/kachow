@@ -4,6 +4,7 @@ from models.Attachment import Attachment
 from schemas.Attachment_Schema import attachment_schema
 from pathlib import Path
 import json
+import os
 import uuid
 
 attachments = flask.Blueprint('attachments', __name__, url_prefix='/attachments')
@@ -37,10 +38,12 @@ def create_attachment():
 def get_attachment_details(id):
     file = Attachment.query.get(id)
     if not file:
-        return flask.abort(400, description="missing file")
+        return flask.abort(404)
     data = attachment_schema.dump(file)
     return flask.jsonify(data)
     
 @attachments.route('/media/<string:unique_id>', methods=['GET'])
 def get_attachment(unique_id):
-    pass
+    if not os.path.exists(f'att_files/{unique_id}'):
+        return flask.abort(404)
+    return flask.send_file(f'att_files/{unique_id}', mimetype='image/*')
