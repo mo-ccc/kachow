@@ -46,7 +46,8 @@ def seed_db():
         new_thread.status = random.randint(0, 2)
         new_thread.time_created = sqlalchemy.func.now()
         db.session.add(new_thread)
-        threads.append(new_thread)
+        if x > 1:
+            threads.append(new_thread)
     db.session.commit()
     
     for x in range(1, 30):
