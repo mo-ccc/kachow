@@ -10,3 +10,5 @@ class Thread(db.Model):
     status = db.Column(db.Integer, nullable=False)
     time_created = db.Column(db.DateTime(timezone=True), nullable=False)
     category_id = db.Column(db.Integer, nullable=False)
+    
+    posts = db.relationship('Post', backref='thread')

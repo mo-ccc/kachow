@@ -36,6 +36,8 @@ def seed_db():
         users.append(new_user)
     db.session.commit()
     
+    threads = []
+    
     for x in range(1, 11):
         new_thread = Thread()
         new_thread.title = f"thread {x}"
@@ -44,5 +46,19 @@ def seed_db():
         new_thread.status = random.randint(0, 2)
         new_thread.time_created = sqlalchemy.func.now()
         db.session.add(new_thread)
+        threads.append(new_thread)
     db.session.commit()
+    
+    for x in range(1, 30):
+        new_post = Post()
+        t_id = random.choice(threads).thread_id
+        new_post.thread_id = t_id
+        new_post.author_id = random.choice(users).user_id
+        new_post.content = f"post {x} in thread: {t_id}"
+        new_post.time_created = sqlalchemy.func.now()
+        db.session.add(new_post)  
+    db.session.commit()
+    
+    print(Post.query.filter_by(thread_id=1).all())
+    
     print("tables seeded")

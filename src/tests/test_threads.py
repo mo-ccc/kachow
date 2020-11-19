@@ -39,7 +39,7 @@ class test_endpoints(unittest.TestCase):
             f'/threads/{thread_id}',
             headers={"Authorization":f"Bearer {token1}"}
         )
-        author_id = response.get_json()["thread_info"]["user"]["user_id"]
+        author_id = response.get_json()["thread_info"]["thread_author"]["user_id"]
         return self.get_token_for_user(author_id)
         
     def test_get(self):

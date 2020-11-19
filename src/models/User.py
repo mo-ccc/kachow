@@ -11,4 +11,5 @@ class User(db.Model):
     role = db.Column(db.SmallInteger, nullable=False)
     password = db.Column(db.String(), nullable=False)
     
-    threads = db.relationship('Thread', backref='user')
+    threads = db.relationship('Thread', backref='thread_author')
+    posts = db.relationship('Post', backref='post_author')

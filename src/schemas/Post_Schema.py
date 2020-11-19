@@ -1,9 +1,11 @@
 from main import ma
 from models.Post import Post
+from schemas.User_Schema import user_schema
 
 class PostSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Post
+    post_author = ma.Nested(user_schema, only=("user_id", "email", "fname", "lname", "role"))
 
-post_schema = PostSchema()
+post_schema = PostSchema(dump_only=("time_created",))
 posts_schema = PostSchema(many=True)
