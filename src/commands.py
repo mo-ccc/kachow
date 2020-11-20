@@ -17,8 +17,6 @@ def drop_db():
     
 @command_db.cli.command('seed')
 def seed_db():
-    from models.Thread import Thread
-    from models.Post import Post
     from models.User import User
     from main import bcrypt
     
@@ -36,6 +34,7 @@ def seed_db():
         users.append(new_user)
     db.session.commit()
     
+    from models.Thread import Thread
     threads = []
     
     for x in range(1, 11):
@@ -50,6 +49,9 @@ def seed_db():
             threads.append(new_thread)
     db.session.commit()
     
+    from models.Post import Post
+    posts = []
+    
     for x in range(1, 30):
         new_post = Post()
         t_id = random.choice(threads).thread_id
@@ -57,9 +59,18 @@ def seed_db():
         new_post.author_id = random.choice(users).user_id
         new_post.content = f"post {x} in thread: {t_id}"
         new_post.time_created = sqlalchemy.func.now()
-        db.session.add(new_post)  
+        db.session.add(new_post)
+        posts.append(new_post)
     db.session.commit()
     
-    print(Post.query.filter_by(thread_id=1).all())
+    from models.Attachment import Attachment
+    
+    for x in range(1, 30):
+        new_attachment = Attachment()
+        new_attachment.post_id = random.choice(posts).post_id
+        new_attachment.attachment_path = f"{x}"
+        new_attachment.post_position = 1
+        db.session.add(new_attachment)
+    db.session.commit()
     
     print("tables seeded")
