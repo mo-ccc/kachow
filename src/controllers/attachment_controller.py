@@ -44,6 +44,7 @@ def create_attachment(jwt_user):
     return flask.jsonify(attachment_schema.dump(new_attachment))
     
 @attachments.route('/<int:id>', methods=['GET'])
+@flask_jwt_extended.jwt_required
 def get_attachment_details(id):
     file = Attachment.query.get(id)
     if not file:
@@ -52,6 +53,7 @@ def get_attachment_details(id):
     return flask.jsonify(data)
     
 @attachments.route('/media/<string:unique_id>', methods=['GET'])
+@flask_jwt_extended.jwt_required
 def get_attachment(unique_id):
     if not os.path.exists(f'att_files/{unique_id}'):
         return flask.abort(404)

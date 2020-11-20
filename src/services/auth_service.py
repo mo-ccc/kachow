@@ -1,5 +1,6 @@
 import inspect
 import flask_jwt_extended
+import flask
 from models.User import User
 
 def verify_user(func):
