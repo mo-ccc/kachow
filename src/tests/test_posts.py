@@ -32,3 +32,23 @@ class TestPosts(BaseTest, unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(data, dict)
         self.assertTrue("posts" in data)
+        
+    def test_post(self):
+        token = self.get_token_for_user(1)
+        response = self.client.post(
+            '/threads/1',
+            headers={"Authorization":f"Bearer {token}"},
+            json={"content":"test post"})
+        self.assertEqual(response.status_code, 200)
+        
+        verify = self.client.get(
+            '/threads/1',
+            headers={"Authorization":f"Bearer {token}"}
+        )
+        check = verify.get_json()
+        all_posts = check["posts"]
+        all_content = []
+        for x in all_posts:
+            all_content.append(x["content"])
+        self.assertTrue("test post" in all_content)
+        
