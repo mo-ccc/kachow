@@ -1,5 +1,7 @@
 from main import db
 import flask_sqlalchemy
+from models.CategoryThreadJoint import association_table
+from models.Category import Category
 
 class Thread(db.Model):
     __tablename__ = "threads"
@@ -9,6 +11,6 @@ class Thread(db.Model):
     title = db.Column(db.String(150), nullable=False)
     status = db.Column(db.Integer, nullable=False)
     time_created = db.Column(db.DateTime(timezone=True), nullable=False)
-    category_id = db.Column(db.Integer, nullable=False)
     
-    posts = db.relationship('Post', backref='thread')
+    posts = db.relationship('Post', backref='posts')
+    categories = db.relationship('Category', secondary=association_table, back_populates='threads')

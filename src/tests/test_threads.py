@@ -37,7 +37,7 @@ class test_endpoints(BaseTest, unittest.TestCase):
         response = self.client.post(
             '/threads/', 
             json={
-                "category_id":1,
+                "categories":[1, 2],
                 "title":"post thread",
                 "status":1
             },
@@ -59,7 +59,7 @@ class test_endpoints(BaseTest, unittest.TestCase):
         response = self.client.put(
             '/threads/2', 
             json={
-               "category_id":1,
+               "categories":[1, 2],
                "title":"put thread",
                "status":1
             },

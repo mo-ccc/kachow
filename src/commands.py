@@ -34,6 +34,15 @@ def seed_db():
         users.append(new_user)
     db.session.commit()
     
+    from models.Category import Category
+    categories = []
+    
+    for x in range(1, 3):
+        new_category = Category(name=f"category: {x}")
+        db.session.add(new_category)
+        categories.append(new_category)
+    db.session.commit()
+    
     from models.Thread import Thread
     threads = []
     
@@ -41,9 +50,9 @@ def seed_db():
         new_thread = Thread()
         new_thread.title = f"thread {x}"
         new_thread.author_id = random.choice(users).user_id
-        new_thread.category_id = 1
         new_thread.status = random.randint(0, 2)
         new_thread.time_created = sqlalchemy.func.now()
+        new_thread.categories = categories
         db.session.add(new_thread)
         if x > 1:
             threads.append(new_thread)
