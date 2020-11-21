@@ -8,7 +8,7 @@ class ThreadSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Thread
     thread_author = ma.Nested(user_schema, only=("user_id", "email", "fname", "lname", "role"))
-    categories = ma.Nested(categories_schema, only=("category_id", "name"))
+    categories = ma.Nested(categories_schema, only=("category_id", "name"), exclude=("threads",))
 
 thread_schema = ThreadSchema(dump_only=("time_created",))
 threads_schema = ThreadSchema(many=True)

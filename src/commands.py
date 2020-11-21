@@ -28,7 +28,7 @@ def seed_db():
         new_user.email = f"test{x}@test.com"
         new_user.fname = "first"
         new_user.lname = "last"
-        new_user.role = 2
+        new_user.role = x%2
         new_user.password = bcrypt.generate_password_hash("123456").decode('utf-8')
         db.session.add(new_user)
         users.append(new_user)

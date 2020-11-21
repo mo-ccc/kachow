@@ -14,3 +14,6 @@ class Thread(db.Model):
     
     posts = db.relationship('Post', backref='posts')
     categories = db.relationship('Category', secondary=association_table, back_populates='threads')
+    
+    def __repr__(self):
+        return f"<Thread {self.thread_id}, {self.title}"
