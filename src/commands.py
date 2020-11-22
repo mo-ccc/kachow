@@ -60,7 +60,12 @@ def seed_db():
     
     from models.Post import Post
     posts = []
-    
+    db.session.add(Post(thread_id=1, author_id=1, 
+        content="change me", mentions=[], time_created=sqlalchemy.func.now())
+    )
+    db.session.add(Post(thread_id=1, author_id=1, 
+        content="delete me", mentions=[], time_created=sqlalchemy.func.now())
+    )
     for x in range(1, 30):
         new_post = Post()
         t_id = random.choice(threads).thread_id

@@ -52,3 +52,44 @@ class TestPosts(BaseTest, unittest.TestCase):
             all_content.append(x["content"])
         self.assertTrue("test post" in all_content)
         
+    def test_patch(self):
+        token = self.get_token_for_user(1)
+        response = self.client.put(
+            '/posts/1',
+            headers={"Authorization":f"Bearer {token}"},
+            json={"content":"changed!"}
+        )
+        
+        self.assertEqual(response.status_code, 200)
+        
+        verify = self.client.get(
+            '/threads/1',
+            headers={"Authorization":f"Bearer {token}"}
+        )
+        check = verify.get_json()
+        all_posts = check["posts"]
+        all_content = []
+        for x in all_posts:
+            all_content.append(x["content"])
+        self.assertTrue("changed!" in all_content)
+        
+    def test_delete(self):
+        token = self.get_token_for_user(1)
+        response = self.client.delete(
+            '/posts/2',
+            headers={"Authorization":f"Bearer {token}"},
+            json={"content":"changed!"}
+        )
+        self.assertEqual(response.status_code, 200)
+        
+        verify = self.client.get(
+            '/threads/1',
+            headers={"Authorization":f"Bearer {token}"}
+        )
+        
+        check = verify.get_json()
+        all_posts = check["posts"]
+        all_content = []
+        for x in all_posts:
+            all_content.append(x["content"])
+        self.assertTrue("delete me" not in all_content)
