@@ -67,6 +67,7 @@ def seed_db():
         new_post.thread_id = t_id
         new_post.author_id = random.choice(users).user_id
         new_post.content = f"post {x} in thread: {t_id}"
+        new_post.mentions = users
         new_post.time_created = sqlalchemy.func.now()
         db.session.add(new_post)
         posts.append(new_post)

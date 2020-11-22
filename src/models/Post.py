@@ -1,5 +1,6 @@
 from main import db
 from models.Attachment import Attachment
+from models.UserPostJoint import tags
 
 class Post(db.Model):
     __tablename__ = "posts"
@@ -12,3 +13,4 @@ class Post(db.Model):
     reply_post_id = db.Column(db.Integer)
     
     attachments = db.relationship('Attachment', backref='attachments')
+    mentions = db.relationship('User', secondary=tags, back_populates='mentioned')

@@ -5,5 +5,5 @@ class MentionSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Mention
 
-Mention_schema = MentionSchema()
-Mentions_schema = MentionSchema(many=True)
+mention_schema = MentionSchema()
+mentions_schema = MentionSchema(many=True)

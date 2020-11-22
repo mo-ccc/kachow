@@ -1,4 +1,5 @@
 from main import db
+from models.UserPostJoint import tags
 
 class User(db.Model):
     __tablename__ = "users"
@@ -13,3 +14,4 @@ class User(db.Model):
     
     threads = db.relationship('Thread', backref='thread_author')
     posts = db.relationship('Post', backref='post_author')
+    mentioned = db.relationship('Post', secondary=tags, back_populates='mentions')
