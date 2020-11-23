@@ -23,7 +23,7 @@ class test_endpoints(BaseTest, unittest.TestCase):
         return super(__class__, self).get_token_for_author_of_thread(thread_id)
         
     def test_get(self):
-        token = self.get_token_for_user(1)
+        token = self.get_token_for_user(2)
         response = self.client.get(
             '/threads/',
             headers={"Authorization":f"Bearer {token}"}
@@ -33,7 +33,7 @@ class test_endpoints(BaseTest, unittest.TestCase):
         self.assertIsInstance(data, list)
         
     def test_post(self):
-        token = self.get_token_for_user(1)
+        token = self.get_token_for_user(2)
         response = self.client.post(
             '/threads/', 
             json={
@@ -54,7 +54,7 @@ class test_endpoints(BaseTest, unittest.TestCase):
         self.assertEqual(thread_title,  "post thread")
         
     def test_put(self):
-        token1 = self.get_token_for_user(1)
+        token1 = self.get_token_for_user(3)
         token2 = self.get_token_for_author_of_thread(2)
         response = self.client.put(
             '/threads/2', 
@@ -65,6 +65,7 @@ class test_endpoints(BaseTest, unittest.TestCase):
             },
             headers={"Authorization":f"Bearer {token2}"}
         )
+        print(response)
         self.assertEqual(response.status_code, 200)
         
         response = self.client.get(
@@ -80,10 +81,6 @@ class test_endpoints(BaseTest, unittest.TestCase):
             '/threads/1',
             headers={"Authorization":f"Bearer {token}"}
         )
-        self.assertEqual(response.status_code, 200)
-        response = self.client.get(
-            '/threads/1',
-            headers={"Authorization":f"Bearer {token}"}
-        )
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 400)
+
         

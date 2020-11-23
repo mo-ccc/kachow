@@ -70,7 +70,7 @@ def modify_thread(thread_id, jwt_user=None):
     thread = Thread.query.filter_by(thread_id=thread_id).first_or_404()
     
     # permissions check
-    if jwt_user.user_id != thread.author_id and user.role > 1:
+    if jwt_user.user_id != thread.author_id and jwt_user.role > 1:
         return flask.abort(400, description='You do not have permissions to do this')
  
     thread.title = data["title"]
@@ -90,11 +90,8 @@ def modify_thread(thread_id, jwt_user=None):
 def delete_thread(thread_id, jwt_user):
     thread = Thread.query.filter_by(thread_id=thread_id).first_or_404()
     posts_in_thread = Post.query.filter_by(thread_id=thread_id).all()
-    if jwt_user.role > 1 and len(posts_in_thread) > 0:
+    if jwt_user.role > 1 or len(posts_in_thread) > 0:
         return flask.abort(400, description='You do not have valid permissions to do this')
-    posts = Post.query.filter_by(thread_id=thread_id).all()
-    for p in posts:
-        db.session.delete(p)
     db.session.delete(thread)
     db.session.commit()
     return 'ok'

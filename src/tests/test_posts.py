@@ -23,7 +23,7 @@ class TestPosts(BaseTest, unittest.TestCase):
         return super(__class__, self).get_token_for_author_of_thread(thread_id)
         
     def test_get(self):
-        token = self.get_token_for_user(1)
+        token = self.get_token_for_user(2)
         response = self.client.get(
             '/threads/1',
             headers={"Authorization":f"Bearer {token}"}
@@ -34,7 +34,7 @@ class TestPosts(BaseTest, unittest.TestCase):
         self.assertTrue("posts" in data)
         
     def test_post(self):
-        token = self.get_token_for_user(1)
+        token = self.get_token_for_user(2)
         response = self.client.post(
             '/threads/1',
             headers={"Authorization":f"Bearer {token}"},
@@ -53,7 +53,7 @@ class TestPosts(BaseTest, unittest.TestCase):
         self.assertTrue("test post" in all_content)
         
     def test_patch(self):
-        token = self.get_token_for_user(1)
+        token = self.get_token_for_user(2)
         response = self.client.put(
             '/posts/1',
             headers={"Authorization":f"Bearer {token}"},
@@ -74,7 +74,7 @@ class TestPosts(BaseTest, unittest.TestCase):
         self.assertTrue("changed!" in all_content)
         
     def test_delete(self):
-        token = self.get_token_for_user(1)
+        token = self.get_token_for_user(2)
         response = self.client.delete(
             '/posts/2',
             headers={"Authorization":f"Bearer {token}"},

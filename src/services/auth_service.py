@@ -7,7 +7,7 @@ def verify_user(func):
     def wrapper(*args, **kwargs):
         jwt_id = flask_jwt_extended.get_jwt_identity()
         user = User.query.filter_by(user_id=jwt_id).first()
-        if not user:
+        if not user or user.role > 2:
             return flask.abort(400, description='Not a valid user')
         kwargs['jwt_user'] = user
         return func(*args, **kwargs)

@@ -22,13 +22,24 @@ def seed_db():
     
     users = []
     
+    # create account for deleted users
+    db.session.add(User(username='deleteduser', email='deleteduser@kachow.com',
+        fname='deleted', lname='user', role=3,
+        password=bcrypt.generate_password_hash('l9@2u84$2#').decode('utf-8')))
+
+    # create account for admin
+    db.session.add(User(username='admin', email='admin@kachow.com', 
+        fname='admin', lname='admin', role=0, 
+        password=bcrypt.generate_password_hash("admin").decode('utf-8')))
+    
+    # generate random accounts
     for x in range(1, 5):
         new_user = User()
         new_user.username = f"test_user{x}"
         new_user.email = f"test{x}@test.com"
         new_user.fname = "first"
         new_user.lname = "last"
-        new_user.role = x%2
+        new_user.role = random.choice([1, 2])
         new_user.password = bcrypt.generate_password_hash("123456").decode('utf-8')
         db.session.add(new_user)
         users.append(new_user)
@@ -36,7 +47,7 @@ def seed_db():
     
     from models.Category import Category
     categories = []
-    
+    # generate 2 categories
     for x in range(1, 3):
         new_category = Category(name=f"category: {x}")
         db.session.add(new_category)
@@ -45,7 +56,7 @@ def seed_db():
     
     from models.Thread import Thread
     threads = []
-    
+    # generate threads
     for x in range(1, 11):
         new_thread = Thread()
         new_thread.title = f"thread {x}"
@@ -60,15 +71,17 @@ def seed_db():
     
     from models.Post import Post
     posts = []
-    db.session.add(Post(thread_id=1, author_id=1, 
+    # posts required for unittest
+    db.session.add(Post(thread_id=1, author_id=4, 
         content="change me", mentions=[], time_created=sqlalchemy.func.now())
     )
-    db.session.add(Post(thread_id=1, author_id=1, 
+    db.session.add(Post(thread_id=1, author_id=4, 
         content="delete me", mentions=[], time_created=sqlalchemy.func.now())
     )
+    # randomise posts
     for x in range(1, 30):
         new_post = Post()
-        t_id = random.choice(threads).thread_id
+        t_id = threads[x%9].thread_id
         new_post.thread_id = t_id
         new_post.author_id = random.choice(users).user_id
         new_post.content = f"post {x} in thread: {t_id}"
@@ -79,7 +92,8 @@ def seed_db():
     db.session.commit()
     
     from models.Attachment import Attachment
-    
+    # create random attachments
+    # does not add images
     for x in range(1, 30):
         new_attachment = Attachment()
         new_attachment.post_id = random.choice(posts).post_id

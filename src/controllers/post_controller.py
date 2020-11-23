@@ -26,7 +26,6 @@ def post_put(data, post, user, mentioned, is_post, thread_id=None):
         post.thread_id = thread_id
         post.author_id = user.user_id
         post.time_created = sqlalchemy.func.now()
-        print('is_post')
     
     db.session.add(post)
     db.session.commit()
