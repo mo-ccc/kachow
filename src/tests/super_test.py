@@ -53,3 +53,13 @@ class BaseTest(unittest.TestCase):
         )
         return response.get_json()
         
+    def get_token_for_admin(self):
+        response = self.client.post(
+            '/auth/login',
+            json={
+                "email":"admin@kachow.com",
+                "password":"admin"
+            }
+        )
+        
+        return response.get_json()
