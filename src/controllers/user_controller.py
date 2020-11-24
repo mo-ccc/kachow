@@ -82,3 +82,10 @@ def edit_user(id, jwt_user=None):
         
     return post_put(user, optional_schema.load(response))
     
+@users.route('/<int:id>', methods=['GET'])
+@flask_jwt_extended.jwt_required
+def get_user(id):
+    user = User.query.filter_by(user_id=id).first_or_404()
+    
+    return flask.jsonify(user_schema.dump(user))
+    

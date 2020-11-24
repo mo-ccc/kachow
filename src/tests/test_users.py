@@ -35,6 +35,16 @@ class TestUsers(BaseTest, unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(data, list)
         
+    def test_get_user(self):
+        token = self.get_token_for_user(2)
+        response = self.client.get(
+            '/users/5',
+            headers={"Authorization":f"Bearer {token}"}
+        )
+        data = response.get_json()
+        self.assertEqual(data["email"], "test3@test.com")
+        self.assertEqual(response.status_code, 200)
+        
     def test_post_user(self):
         token = self.get_token_for_admin()
         response = self.client.post(
@@ -76,10 +86,12 @@ class TestUsers(BaseTest, unittest.TestCase):
             '/users/3',
             headers={"Authorization":f"Bearer {token}"}
         )
-        print(response.data)
-        
         self.assertEqual(response.status_code, 200)
         
-        verify = self.get_token_for_user(2)
-        print(verify)
+        verify = self.get_token_for_user(1)
+        test = self.client.get(
+            '/threads/',
+            headers={"Authorization":f"Bearer {verify}"}
+        )
+        self.assertEqual(test.status_code, 422)
             
