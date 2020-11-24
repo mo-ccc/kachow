@@ -24,4 +24,4 @@ def login():
     access_token = create_access_token(identity=user.user_id, 
                                        expires_delta=expiry
                                        )
-    return flask.jsonify(access_token), 200
+    return flask.jsonify(access_token)

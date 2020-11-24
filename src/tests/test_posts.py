@@ -39,6 +39,10 @@ class TestPosts(BaseTest, unittest.TestCase):
             '/threads/1',
             headers={"Authorization":f"Bearer {token}"},
             json={"content":"test post"})
+            
+        if response.status_code != 200:
+            print(response.get_json())
+            
         self.assertEqual(response.status_code, 200)
         
         verify = self.client.get(
@@ -60,6 +64,9 @@ class TestPosts(BaseTest, unittest.TestCase):
             json={"content":"changed!"}
         )
         
+        if response.status_code != 200:
+            print(response.data)
+            
         self.assertEqual(response.status_code, 200)
         
         verify = self.client.get(
@@ -80,6 +87,10 @@ class TestPosts(BaseTest, unittest.TestCase):
             headers={"Authorization":f"Bearer {token}"},
             json={"content":"changed!"}
         )
+
+        if response.status_code != 200:
+            print(response.data)
+
         self.assertEqual(response.status_code, 200)
         
         verify = self.client.get(

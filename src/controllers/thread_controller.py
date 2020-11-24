@@ -87,7 +87,7 @@ def modify_thread(thread_id, jwt_user=None):
 @threads.route('/<thread_id>', methods=['DELETE'])
 @flask_jwt_extended.jwt_required
 @auth_service.verify_user
-def delete_thread(thread_id, jwt_user):
+def delete_thread(thread_id, jwt_user=None):
     thread = Thread.query.filter_by(thread_id=thread_id).first_or_404()
     posts_in_thread = Post.query.filter_by(thread_id=thread_id).all()
     if jwt_user.role > 1 or len(posts_in_thread) > 0:

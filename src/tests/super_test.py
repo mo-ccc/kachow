@@ -6,6 +6,7 @@ class BaseTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.app = create_app()
+        cls.app.config['TESTING'] = True
         cls.app_context = cls.app.app_context()
         cls.app_context.push()
         cls.client = cls.app.test_client()
@@ -31,6 +32,9 @@ class BaseTest(unittest.TestCase):
                 "password":"123456"
             }
         )
+        if response.status_code != 200:
+            print(response.data)
+        
         return response.get_json()
     
     def get_token_for_author_of_thread(self, thread_id):
@@ -39,5 +43,13 @@ class BaseTest(unittest.TestCase):
             f'/threads/{thread_id}',
             headers={"Authorization":f"Bearer {token1}"}
         )
-        author_id = response.get_json()["thread_info"]["thread_author"]["user_id"]
-        return self.get_token_for_user(author_id)
+        author_email = response.get_json()["thread_info"]["thread_author"]["email"]
+        response = self.client.post(
+            '/auth/login',
+            json={
+                "email":author_email,
+                "password":"123456"
+            }
+        )
+        return response.get_json()
+        
