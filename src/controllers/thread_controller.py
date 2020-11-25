@@ -15,8 +15,8 @@ threads = flask.Blueprint('thread', __name__, url_prefix='/threads')
 
 @threads.route('/', methods=['GET'])
 @flask_jwt_extended.jwt_required
-@query_service.page_query(Thread, lim=10)
 def get_threads(items=None):
+    items = query_service.page_query(Thread.query)
     output = threads_schema.dump(items)
     return flask.jsonify(output)
     
@@ -52,7 +52,7 @@ def get_thread(thread_id, items=None):
     thread_info = Thread.query.filter_by(thread_id=thread_id).first_or_404()
     thread_out = thread_schema.dump(thread_info)
     
-    posts = Post.query.filter_by(thread_id=thread_id).all()
+    posts = query_service.page_query(Post.query.filter_by(thread_id=thread_id))
     posts_out = posts_schema.dump(posts)
     
     # combine thread info and posts into one json
