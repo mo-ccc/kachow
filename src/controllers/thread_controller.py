@@ -16,7 +16,14 @@ threads = flask.Blueprint('thread', __name__, url_prefix='/threads')
 @threads.route('/', methods=['GET'])
 @flask_jwt_extended.jwt_required
 def get_threads(items=None):
-    items = query_service.page_query(Thread.query)
+    status_num = query_service.base_int_query('status')
+    
+    if status_num != None:
+        threads_by_status = Thread.query.filter_by(status=status_num)
+        items = query_service.page_query(threads_by_status)
+    else:
+        items = query_service.page_query(Thread.query)
+
     output = threads_schema.dump(items)
     return flask.jsonify(output)
     

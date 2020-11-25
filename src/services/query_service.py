@@ -1,20 +1,25 @@
 import flask
-from models.Post import Post
+from models.Thread import Thread
+
+def base_int_query(arg):
+    param = flask.request.args.get(arg)
+    if param:
+        try:
+            int_param = int(param)
+        except:
+            flask.abort(400, description="query parameter must be an integer")
+        
+        return int_param
+    
+    return None
 
 def page_query(query, lim=2):
-    page = flask.request.args.get('pg')
-    if page:
-        try:
-            int_page = int(page)
-        except:
-            flask.abort(400, description='page number must be an integer greater than 0')
+    page_num = base_int_query('pg')
 
-        if int_page < 1:
-            flask.abort(400, description='page number must be an integer greater than 0')
-            
-        all_items = query.limit(lim).offset((int_page-1)*lim)
-        
-    else:
-        all_items = query.limit(lim)
-            
-    return all_items
+    if not page_num:
+        return query.limit(lim)
+       
+    if page_num < 1:
+            flask.abort(400, description="query must be an integer greater than 0")
+
+    return query.limit(lim).offset((page_num-1)*lim)
