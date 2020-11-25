@@ -6,8 +6,8 @@ from models.User import User
 from models.Category import Category
 from schemas.Thread_Schema import thread_schema, threads_schema
 from schemas.Post_Schema import post_schema, posts_schema
-from services import auth_service
-from sqlalchemy import func
+from services import auth_service, query_service
+import sqlalchemy
 import flask_jwt_extended
 import json
 
@@ -15,23 +15,9 @@ threads = flask.Blueprint('thread', __name__, url_prefix='/threads')
 
 @threads.route('/', methods=['GET'])
 @flask_jwt_extended.jwt_required
-def get_threads():
-    page = flask.request.args.get('pg')
-    if page:
-        try:
-            int_page = int(page)
-        except:
-            flask.abort(400, description='page number must be an integer greater than 0')
-
-        if int_page < 1:
-            flask.abort(400, description='page number must be an integer greater than 0')
-
-        all_threads = Thread.query.limit(3).offset((int_page-1)*3)
-        
-    else:
-        all_threads = Thread.query.limit(3)
-
-    output = threads_schema.dump(all_threads)
+@query_service.page_query(Thread, lim=10)
+def get_threads(items=None):
+    output = threads_schema.dump(items)
     return flask.jsonify(output)
     
 @threads.route('/', methods=['POST'])
@@ -47,7 +33,7 @@ def create_thread(jwt_user=None):
     new_thread.author_id = jwt_user.user_id
     new_thread.title = data["title"]
     new_thread.status = data["status"]
-    new_thread.time_created = func.now()
+    new_thread.time_created = sqlalchemy.func.now()
     
     # add categories to thread
     categories = []
@@ -62,7 +48,7 @@ def create_thread(jwt_user=None):
     
 @threads.route('/<thread_id>', methods=['GET'])
 @flask_jwt_extended.jwt_required
-def get_thread(thread_id):
+def get_thread(thread_id, items=None):
     thread_info = Thread.query.filter_by(thread_id=thread_id).first_or_404()
     thread_out = thread_schema.dump(thread_info)
     
