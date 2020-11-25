@@ -16,7 +16,21 @@ threads = flask.Blueprint('thread', __name__, url_prefix='/threads')
 @threads.route('/', methods=['GET'])
 @flask_jwt_extended.jwt_required
 def get_threads():
-    all_threads = Thread.query.all()
+    page = flask.request.args.get('pg')
+    if page:
+        try:
+            int_page = int(page)
+        except:
+            flask.abort(400, description='page number must be an integer greater than 0')
+
+        if int_page < 1:
+            flask.abort(400, description='page number must be an integer greater than 0')
+
+        all_threads = Thread.query.limit(3).offset((int_page-1)*3)
+        
+    else:
+        all_threads = Thread.query.limit(3)
+
     output = threads_schema.dump(all_threads)
     return flask.jsonify(output)
     
