@@ -10,7 +10,6 @@ class Post(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
     content = db.Column(db.String(), nullable=False)
     time_created = db.Column(db.DateTime(timezone=True), nullable=False)
-    reply_post_id = db.Column(db.Integer)
     
     attachments = db.relationship('Attachment', backref='attachments')
     mentions = db.relationship('User', secondary=tags, back_populates='mentioned')
