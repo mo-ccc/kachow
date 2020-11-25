@@ -4,5 +4,14 @@ from controllers.user_controller import users
 from controllers.auth_controller import auth
 from controllers.attachment_controller import attachments
 from controllers.category_controller import categories
+from controllers.dashboard_controller import dash
 
-blueprints = [threads, posts, users, auth, attachments, categories]
+blueprints = [
+    threads,
+    posts,
+    users,
+    auth,
+    attachments,
+    categories,
+    dash
+]
