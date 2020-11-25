@@ -1,9 +1,7 @@
 name: pipeline
 
 # interesting
-on:
-  push:
-    branches: [master]
+on: push
     
 jobs:
   test-suite:
