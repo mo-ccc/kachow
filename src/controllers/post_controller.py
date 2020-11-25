@@ -10,21 +10,22 @@ import json
 
 posts = flask.Blueprint('post', __name__)
 
-def post_put(data, post, user, mentioned, is_post, thread_id=None):
+def post_put(data, post, author, mentioned, is_post, thread_id=None):
+    # content meaning message
     post.content = data["content"]
     
+    # checks to see if user_ids are present in mentioned field
+    # if true append each actual user to a list 'mentions'
     if mentioned != None:
         mentions = [User.query.get(u) for u in mentioned]
     else:
         mentions = []
     post.mentions = mentions
     
-    if "reply_post_id" in data:
-        post.reply_post_id = data["reply_post_id"]
-    
+    # if it's a post request set these fields in the database
     if is_post == True:
         post.thread_id = thread_id
-        post.author_id = user.user_id
+        post.author_id = author.user_id
         post.time_created = sqlalchemy.func.now()
     
     db.session.add(post)
