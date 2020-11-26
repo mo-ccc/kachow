@@ -17,6 +17,16 @@ class Config(object):
         if not value:
             raise ValueError("no SECRET_KEY environnment variable")
         return value
+    
+    @property
+    def AWS_S3_BUCKET(self):
+        value = os.getenv("AWS_S3_BUCKET")
+        if not value:
+            raise ValueError("no AWS_S3_BUCKET environnment variable")
+        return value
+    
+    # 10 megabytes
+    MAX_CONTENT_LENGTH = 10*1024*1024
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     

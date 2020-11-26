@@ -10,6 +10,7 @@ from pathlib import Path
 import json
 import os
 import uuid
+import boto3
 
 attachments = flask.Blueprint('attachments', __name__, url_prefix='/attachments')
 
@@ -30,8 +31,10 @@ def create_attachment(jwt_user):
         return flask.abort(400, description="you do not own this post")
     
     unique_id = uuid.uuid4()
-    file_location = f'att_files/{unique_id}{extension}'
-    file.save(file_location)
+    file_location = f'attachments/{unique_id}{extension}'
+    s3 = boto3.client('s3')
+    
+    s3.upload_fileobj(file, flask.current_app.config["AWS_S3_BUCKET"], file_location)
     
     new_attachment = Attachment()
     new_attachment.post_id = data["post_id"]
@@ -55,6 +58,13 @@ def get_attachment_details(id):
 @attachments.route('/media/<string:unique_id>', methods=['GET'])
 @flask_jwt_extended.jwt_required
 def get_attachment(unique_id):
-    if not os.path.exists(f'att_files/{unique_id}'):
-        return flask.abort(404)
-    return flask.send_file(f'att_files/{unique_id}', mimetype='image/*')
+    s3 = boto3.client('s3').Bucket(flask.current_app.config["AWS_S3_BUCKET"])
+    file = f"attachments/{unique_id}"
+    file_obj = s3.Object(file).get()
+    
+    return Response(
+        file_obj['Body'].read(),
+        mimetype='image/png',
+        headers={"Content-Disposition": f"attachment;filename={unique_id}"}
+    )
+    
