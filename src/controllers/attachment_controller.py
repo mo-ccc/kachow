@@ -58,11 +58,11 @@ def get_attachment_details(id):
 @attachments.route('/media/<string:unique_id>', methods=['GET'])
 @flask_jwt_extended.jwt_required
 def get_attachment(unique_id):
-    s3 = boto3.client('s3').Bucket(flask.current_app.config["AWS_S3_BUCKET"])
+    s3 = boto3.resource('s3').Bucket(flask.current_app.config["AWS_S3_BUCKET"])
     file = f"attachments/{unique_id}"
     file_obj = s3.Object(file).get()
     
-    return Response(
+    return flask.Response(
         file_obj['Body'].read(),
         mimetype='image/png',
         headers={"Content-Disposition": f"attachment;filename={unique_id}"}
