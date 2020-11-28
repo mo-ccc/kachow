@@ -67,4 +67,21 @@ def get_attachment(unique_id):
         mimetype='image/png',
         headers={"Content-Disposition": f"attachment;filename={unique_id}"}
     )
+
+@attachments.route('/<int:id>', methods=['DELETE'])
+@flask_jwt_extended.jwt_required
+@auth_service.verify_user
+def delete_attachment(id, jwt_user=None):
+    attachment = Attachment.query.get(id)
+    post = Post.query.get(attachment.post_id)
     
+    if post.author_id != jwt_user.user_id or jwt_user.role > 1:
+        flask.abort(400, description="you do not have permission to do this")
+    
+    s3 = boto3.resource('s3')
+    obj = s3.Object(flask.current_app.config["AWS_S3_BUCKET"], f"attachments/{attachment.attachment_path}")
+    obj.delete()
+    
+    db.session.delete(attachment)
+    db.session.commit()
+    return flask.jsonify(attachment_schema.dump(attachment))
