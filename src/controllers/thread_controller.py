@@ -18,11 +18,12 @@ threads = flask.Blueprint('thread', __name__, url_prefix='/threads')
 def get_threads(items=None):
     status_num = query_service.base_int_query('status')
     
+    # using a joinedload on thread_author leads to faster load times
+    base_q = Thread.query.options(sqlalchemy.orm.joinedload("thread_author"))
     if status_num != None:
-        threads_by_status = Thread.query.filter_by(status=status_num)
-        items = query_service.page_query(threads_by_status)
+        items = query_service.page_query(base_q.filter_by(status=status_num))
     else:
-        items = query_service.page_query(Thread.query)
+        items = query_service.page_query(base_q)
 
     output = threads_schema.dump(items)
     return flask.jsonify(output)
@@ -59,7 +60,8 @@ def get_thread(thread_id, items=None):
     thread_info = Thread.query.filter_by(thread_id=thread_id).first_or_404()
     thread_out = thread_schema.dump(thread_info)
     
-    posts = query_service.page_query(Post.query.filter_by(thread_id=thread_id))
+    # joinedload for speed
+    posts = query_service.page_query(Post.query.options(sqlalchemy.orm.joinedload("post_author")).filter_by(thread_id=thread_id))
     posts_out = posts_schema.dump(posts)
     
     # combine thread info and posts into one json

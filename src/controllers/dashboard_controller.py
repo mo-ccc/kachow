@@ -26,5 +26,5 @@ def get_chart():
 @auth_service.verify_user
 def get_notifications(jwt_user=None):
     notifications = Post.query.filter(Post.mentions.any(user_id=jwt_user.user_id)).all()
-    posts_schema = PostSchema(exclude=("mentions", "attachments", "content", "reply_post_id"), many=True)
+    posts_schema = PostSchema(exclude=("mentions", "attachments", "content"), many=True)
     return flask.jsonify(posts_schema.dump(notifications))

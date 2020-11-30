@@ -7,4 +7,4 @@ class Category(db.Model):
     category_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30))
     
-    threads = db.relationship("Thread", secondary=association_table, back_populates='categories')
+    threads = db.relationship("Thread", secondary=association_table, back_populates='categories', lazy='joined')

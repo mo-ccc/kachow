@@ -11,5 +11,5 @@ class Post(db.Model):
     content = db.Column(db.String(), nullable=False)
     time_created = db.Column(db.DateTime(timezone=True), nullable=False)
     
-    attachments = db.relationship('Attachment', backref='attachments')
-    mentions = db.relationship('User', secondary=tags, back_populates='mentioned')
+    attachments = db.relationship('Attachment', backref='attachments', lazy='joined')
+    mentions = db.relationship('User', secondary=tags, back_populates='mentioned', lazy='joined')
