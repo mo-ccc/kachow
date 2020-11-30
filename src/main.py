@@ -9,8 +9,13 @@ ma = Marshmallow()
 from flask_bcrypt import Bcrypt
 bcrypt = Bcrypt()
 
+# initialize jwt
 from flask_jwt_extended import JWTManager
 jwt = JWTManager()
+
+# initialize migrations
+from flask_migrate import Migrate
+migrate = Migrate()
 
 def create_app():
     # setup flask
@@ -23,6 +28,7 @@ def create_app():
     ma.init_app(app)
     bcrypt.init_app(app)
     jwt.init_app(app)
+    migrate.init_app(app, db)
 
     # register blueprints
     from controllers import blueprints

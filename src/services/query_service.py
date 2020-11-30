@@ -13,7 +13,7 @@ def base_int_query(arg):
     
     return None
 
-def page_query(query, lim=2):
+def page_query(query, lim=10):
     page_num = base_int_query('pg')
 
     if not page_num:

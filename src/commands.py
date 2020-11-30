@@ -3,7 +3,7 @@ from main import db
 import random
 import sqlalchemy
 
-command_db = flask.Blueprint('db', __name__)
+command_db = flask.Blueprint('db-custom', __name__)
 
 @command_db.cli.command('create')
 def create_db():
@@ -13,6 +13,7 @@ def create_db():
 @command_db.cli.command('drop')
 def drop_db():
     db.drop_all()
+    db.engine.execute("DROP TABLE IF EXISTS alembic_version;")
     print("tables dropped")
     
 @command_db.cli.command('seed')

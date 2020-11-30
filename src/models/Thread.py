@@ -12,8 +12,8 @@ class Thread(db.Model):
     status = db.Column(db.Integer, nullable=False)
     time_created = db.Column(db.DateTime(timezone=True), nullable=False)
     
-    posts = db.relationship('Post', backref='posts')
-    categories = db.relationship('Category', secondary=association_table, back_populates='threads')
+    posts = db.relationship('Post', backref='posts', lazy='joined')
+    categories = db.relationship('Category', secondary=association_table, back_populates='threads', lazy='joined')
     
     def __repr__(self):
         return f"<Thread {self.thread_id}, {self.title}"
