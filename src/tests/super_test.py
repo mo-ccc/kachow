@@ -15,7 +15,7 @@ class BaseTest(unittest.TestCase):
         
         # invokes 'flask db seed' in console
         runner = cls.app.test_cli_runner()
-        runner.invoke(args=["db", "seed"])
+        runner.invoke(args=["db-custom", "seed"])
         
     @classmethod
     def tearDownClass(cls):
