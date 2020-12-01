@@ -9,7 +9,7 @@ Admins will be able to create new users and allocate them roles and teams. Users
 A swagger file is available in the docs folder to document the api.
 
 # Installation instructions
-The app makes use of the venv pip package to create a virtual environment. Therefore the package will need to be installed in order to run the app. There after the install instructions are as below:
+The app makes use of the venv pip package to create a virtual environment. Therefore the package will need to be installed in order to run the app. Thereafter the install instructions are as below:
 
 - Clone the repo
 ```git clone github.com/mo-ccc/kachow.git```
@@ -34,6 +34,11 @@ The app makes use of the venv pip package to create a virtual environment. There
 ```export FLASK_ENV=production```
 - run gunicorn on the port of your choice
 ```gunicorn -b 0.0.0.0:{port} "main:create_app"```
+
+For a more detailed guide on how to fully deploy this application to aws with a database, s3 bucket, domain and ssl. Follow this link **https://github.com/mo-ccc/kachow/wiki/How-to-correctly-host-on-AWS**
+
+# CI Pipeline
+This project uses a CI pipeline to run the unitests to ensure that the application is capable of running on deployment. In the future continuous deployment may be introduced if the costs can be justified.
 
 # Wireframes
 **Dashboard:**
