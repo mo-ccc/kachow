@@ -11,6 +11,11 @@ paths:
       - "users"
       summary: "Get users"
       parameters:
+        - in: "header"
+          name: "authorization"
+          required: true
+          type: "string"
+          description: "sent as a bearer token. this can be retrieved from login"
         - in: "query"
           name: "amount"
           required: false
@@ -38,12 +43,17 @@ paths:
       - "users"
       summary: "Create a user"
       parameters:
+      - in: "header"
+        name: "authorization"
+        required: true
+        type: "string"
+        description: "sent as a bearer token. this can be retrieved from login"
       - in: "body"
         name: "body"
         description: "Creating a user"
         required: true
         schema:
-          $ref: "#/definitions/user-schema"
+          $ref: "#/definitions/user-create-schema"
       responses:
         "200":
           description: "OK"
@@ -58,6 +68,11 @@ paths:
       - "users"
       summary: "Get a user"
       parameters:
+      - in: "header"
+        name: "authorization"
+        required: true
+        type: "string"
+        description: "sent as a bearer token. this can be retrieved from login"
       - in: "path"
         name: "id"
         required: true
@@ -85,6 +100,11 @@ paths:
       - "users"
       summary: "Update a user"
       parameters:
+      - in: "header"
+        name: "authorization"
+        required: true
+        type: "string"
+        description: "sent as a bearer token. this can be retrieved from login"
       - in: "path"
         name: "id"
         required: true
@@ -94,7 +114,7 @@ paths:
         description: "Update a user"
         required: true
         schema:
-          $ref: "#/definitions/user-schema"
+          $ref: "#/definitions/user-create-schema"
       responses:
         "200":
           description: "Request processed"
@@ -110,6 +130,11 @@ paths:
       - "users"
       summary: "Delete a user"
       parameters:
+      - in: "header"
+        name: "authorization"
+        required: true
+        type: "string"
+        description: "sent as a bearer token. this can be retrieved from login"
       - in: "path"
         name: "id"
         required: true
@@ -117,8 +142,8 @@ paths:
       responses:
         "404":
           description: "user not found"
-        "401":
-          description: "Unauthorized request. you must be of a higher role than the target user to do that"
+        "400":
+          description: "Unauthorized request. you must be a higher role than the target user to do that"
   
   /category:
     get:
@@ -126,6 +151,11 @@ paths:
       - "categories"
       summary: "Get all categories"
       parameters:
+        - in: "header"
+          name: "authorization"
+          required: true
+          type: "string"
+          description: "sent as a bearer token. this can be retrieved from login"
         - in: "query"
           name: "amount"
           required: false
@@ -157,6 +187,11 @@ paths:
       - "categories"
       summary: "Add a category"
       parameters:
+        - in: "header"
+          name: "authorization"
+          required: true
+          type: "string"
+          description: "sent as a bearer token. this can be retrieved from login"
         - in: "body"
           name: "body"
           required: true
@@ -177,6 +212,11 @@ paths:
       tags:
       - "categories"
       parameters:
+        - in: "header"
+          name: "authorization"
+          required: true
+          type: "string"
+          description: "sent as a bearer token. this can be retrieved from login"
         - in: "path"
           name: "id"
           required: true
@@ -217,6 +257,11 @@ paths:
       tags:
       - "categories"
       parameters:
+        - in: "header"
+          name: "authorization"
+          required: true
+          type: "string"
+          description: "sent as a bearer token. this can be retrieved from login"
         - in: "path"
           name: "id"
           required: true
@@ -242,6 +287,11 @@ paths:
       tags:
       - "categories"
       parameters:
+        - in: "header"
+          name: "authorization"
+          required: true
+          type: "string"
+          description: "sent as a bearer token. this can be retrieved from login"
         - in: "path"
           name: "id"
           required: true
@@ -270,6 +320,11 @@ paths:
       - "threads"
       summary: "Get threads"
       parameters:
+        - in: "header"
+          name: "authorization"
+          required: true
+          type: "string"
+          description: "sent as a bearer token. this can be retrieved from login"
         - in: "query"
           name: "amount"
           required: false
@@ -297,12 +352,17 @@ paths:
       - "threads"
       summary: "Create a new thread"
       parameters:
+      - in: "header"
+        name: "authorization"
+        required: true
+        type: "string"
+        description: "sent as a bearer token. this can be retrieved from login"
       - in: "body"
         name: "body"
         description: "Creating a thread"
         required: true
         schema:
-          $ref: "#/definitions/thread-schema"
+          $ref: "#/definitions/thread-create-schema"
       responses:
         "200":
           description: "OK"
@@ -317,6 +377,11 @@ paths:
       - "threads"
       summary: "get a thread and its posts"
       parameters:
+      - in: "header"
+        name: "authorization"
+        required: true
+        type: "string"
+        description: "sent as a bearer token. this can be retrieved from login"
       - in: "path"
         name: "id"
         required: true
@@ -326,12 +391,7 @@ paths:
           description: "returns posts in thread"
           schema:
             allOf:
-            - $ref: "#/definitions/thread-retrieval-schema"
-            properties:
-              posts:
-                type: "array"
-                items:
-                  $ref: "#/definitions/post-retrieval-schema"
+            - $ref: "#/definitions/deep-thread-retrieval-schema"
         "400":
           description: "bad request. Path id must be an integer greater than or equal to 0"
         "401":
@@ -344,6 +404,11 @@ paths:
       - "threads"
       summary: "Update an existing thread"
       parameters:
+      - in: "header"
+        name: "authorization"
+        required: true
+        type: "string"
+        description: "sent as a bearer token. this can be retrieved from login"
       - in: "path"
         name: "id"
         required: true
@@ -353,7 +418,7 @@ paths:
         description: "Thread to update"
         required: true
         schema:
-          $ref: "#/definitions/thread-schema"
+          $ref: "#/definitions/thread-create-schema"
       responses:
         "200":
           description: "OK"
@@ -369,6 +434,11 @@ paths:
         - "threads"
       summary: "delete an existing thread"
       parameters:
+      - in: "header"
+        name: "authorization"
+        required: true
+        type: "string"
+        description: "sent as a bearer token. this can be retrieved from login"
       - in: "path"
         name: "id"
         required: true
@@ -386,6 +456,11 @@ paths:
         - "posts"
       summary: "create a post"
       parameters:
+      - in: "header"
+        name: "authorization"
+        required: true
+        type: "string"
+        description: "sent as a bearer token. this can be retrieved from login"
       - in: "path"
         name: "id"
         required: true
@@ -395,7 +470,7 @@ paths:
         description: "creating a post"
         required: true
         schema:
-          $ref: "#/definitions/post-schema"
+          $ref: "#/definitions/post-create-schema"
       responses:
         "200":
           description: "OK"
@@ -412,6 +487,11 @@ paths:
       - "posts"
       summary: "Update an existing post"
       parameters:
+      - in: "header"
+        name: "authorization"
+        required: true
+        type: "string"
+        description: "sent as a bearer token. this can be retrieved from login"
       - in: "path"
         name: "id"
         required: true
@@ -420,7 +500,7 @@ paths:
         name: "body"
         required: true
         schema:
-          $ref: "#/definitions/post-schema"
+          $ref: "#/definitions/post-create-schema"
       responses:
         "200":
           description: "OK"
@@ -436,6 +516,11 @@ paths:
       - "posts"
       summary: "Delete an existing post"
       parameters:
+      - in: "header"
+        name: "authorization"
+        required: true
+        type: "string"
+        description: "sent as a bearer token. this can be retrieved from login"
       - in: "path"
         name: "id"
         required: true
@@ -453,12 +538,26 @@ paths:
       tags:
       - "attachments"
       summary: "Add an attachment"
+      consumes:
+        - multipart/form-data
+        - application/json
       parameters:
-      - in: "body"
-        name: "body"
+      - in: "header"
+        name: "authorization"
         required: true
-        schema:
-          $ref: "#/definitions/attachment-schema"
+        type: "string"
+        description: "sent as a bearer token. this can be retrieved from login"
+
+      - in: "formData"
+        name: "json"
+        required: true
+        type: "string"
+        description: "send attachment schema json. i.e. post_id, post_position"
+          
+      - in: "formData"
+        name: "file"
+        required: true
+        type: "file"
       responses:
         "200":
           description: "OK"
@@ -473,13 +572,21 @@ paths:
       - "attachments"
       summary: "Get an attachment"
       parameters:
+      - in: "header"
+        name: "authorization"
+        required: true
+        type: "string"
+        description: "sent as a bearer token. this can be retrieved from login"
       - in: "path"
         name: "id"
         required: true
         type: "integer"
       responses:
         "200":
-          description: "image"
+          description: "OK"
+          schema:
+            allOf:
+              - $ref: "#/definitions/attachment-retrieval-schema"
         "401":
           description: "Unauthorized request. You must be a user to do that"
         "404":
@@ -490,6 +597,11 @@ paths:
       - "attachments"
       summary: "Delete an attachment"
       parameters:
+      - in: "header"
+        name: "authorization"
+        required: true
+        type: "string"
+        description: "sent as a bearer token. this can be retrieved from login"
       - in: "path"
         name: "id"
         required: true
@@ -501,32 +613,60 @@ paths:
           description: "Unauthorized request. You must be a user to do that"
         "404":
           description: "Attachment not found"
+  
+  /attachments/media/{attachment_path}:
+    get:
+      tags:
+        - "attachments"
+      summary: "retrieve a file"
+      parameters:
+      - in: "header"
+        name: "authorization"
+        required: true
+        type: "string"
+        description: "sent as a bearer token. this can be retrieved from login"
+      - in: "path"
+        name: "attachment_path"
+        required: true
+        type: "integer"
+      responses:
+        "200":
+          description: "file returned"
+        '404':
+          description: "file not found"
           
-  /mentions:
+  /auth/login:
     post:
       tags:
-      - "misc"
-      summary: "Add a mention"
+      - "auth"
+      summary: "login"
       parameters:
       - in: "body"
         name: "body"
-        required: true
         schema:
           properties:
-            mentioned-id:
-              type: "integer"
+            email:
+              type: "string"
+            password:
+              type: "string"
       responses:
         "200":
-          description: "success"
-        "400":
-          description: "Bad request mention-id does not correspond to a user"
-        "401":
-          description: "Unauthorized request. You must be a user to do that"
+          description: "OK"
+          schema:
+            type: "string"
+            example: "token"
+          
   /dashboard:
     get:
       tags:
       - "misc"
       summary: "Dashboard for a user"
+      parameters:
+      - in: "header"
+        name: "authorization"
+        required: true
+        type: "string"
+        description: "sent as a bearer token. this can be retrieved from login"
       responses:
         "200":
           description: "OK"
@@ -546,6 +686,25 @@ paths:
                       type: "integer"
                     year:
                       type: "integer"
+  /notifications:
+    get:
+      tags:
+      - "misc"
+      summary: "All posts where logged in user has been mentioned"
+      parameters:
+      - in: "header"
+        name: "authorization"
+        required: true
+        type: "string"
+        description: "sent as a bearer token. this can be retrieved from login"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              allOf:
+                - $ref: "#/definitions/post-link-schema"
     
 definitions:
   thread-schema:
@@ -555,8 +714,6 @@ definitions:
     - "title"
     - "status"
     properties:
-      category_id:
-        type: "integer"
       title:
         type: "string"
         example: "Null pointer exception on scanner"
@@ -570,12 +727,45 @@ definitions:
   
   thread-retrieval-schema:
     properties:
-      timestamp:
+      categories:
+        type: "array"
+        items:
+          type: "object"
+          properties:
+            category_id:
+              type: "integer"
+            name:
+              type: "string"
+      thread_author:
+        type: "array"
+        items:
+          allOf:
+            - $ref: "#/definitions/user-retrieval-schema"
+      time_created:
         type: "string"
       author_id:
         type: "integer"
       last-updated:
         type: "string"
+    allOf:
+      - $ref: "#/definitions/thread-schema"
+      
+  deep-thread-retrieval-schema:
+    properties:
+      posts:
+        type: "array"
+        items:
+          allOf:
+            - $ref: "#/definitions/post-retrieval-schema"
+    allOf:
+      - $ref: "#/definitions/thread-retrieval-schema"
+  
+  thread-create-schema:
+    properties:
+      categories:
+        type: "array"
+        items:
+          type: "integer"
     allOf:
       - $ref: "#/definitions/thread-schema"
             
@@ -596,8 +786,9 @@ definitions:
         enum:
         - 0 # administrator
         - 1 # moderator
-        - 2 # manager
-        - 3 # user
+        - 2 # user
+        - 3 # deleted
+      
   
   user-retrieval-schema:
     properties:
@@ -605,33 +796,73 @@ definitions:
         type: "integer"
     allOf:
       - $ref: "#/definitions/user-schema"
-        
+      
+  user-create-schema:
+    properties:
+      password:
+        type: "string"
+    allOf:
+      - $ref: "#/definitions/user-schema"
+
   post-schema:
     type: "object"
     properties:
       content:
         type: "string"
-      reply_post_id:
-        type: "integer" # integer of post-id
   
-  post-retrieval-schema:
+  post-create-schema:
     properties:
-      timestamp:
-        type: "string"
-      author_id:
-        type: "integer"
+      mentions:
+        type: "array"
+        items: 
+          type: "integer"
     allOf:
       - $ref: "#/definitions/post-schema"
+  
+  post-link-schema:
+    properties:
+      post_author:
+        type: "object"
+        allOf:
+          - $ref: "#/definitions/user-retrieval-schema"
+      thread_id:
+        type: "integer"
+
+  post-retrieval-schema:
+    properties:
+      time_created:
+        type: "string"
+      post_author:
+        type: "object"
+        allOf:
+          - $ref: "#/definitions/user-retrieval-schema"
+      mentions:
+        type: "array"
+        items:
+          allOf:
+            - $ref: "#/definitions/user-retrieval-schema"
+      attachments:
+        type: "array"
+        items:
+          allOf:
+            - $ref: "#/definitions/attachment-retrieval-schema"
+    allOf:
+      - $ref: "#/definitions/post-schema"
+      
       
   attachment-schema:
     properties:
       post_id:
         type: "integer"
-      content:
-        type: "string"
-        format: "binary"
       post-position:
         type: "integer"
+  
+  attachment-retrieval-schema:
+    properties:
+      attachment_path:
+        type: "string"
+    allOf:
+      - $ref: "#/definitions/attachment-schema"
         
   dash-schema:
     properties:
