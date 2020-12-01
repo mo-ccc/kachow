@@ -5,7 +5,7 @@ import datetime
 log_directory = os.path.join(os.getcwd(), 'log')
 
 if not os.path.exists(log_dir):
-    os.mkdir(log_dir)
+    os.mkdir('log_dir')
     
 now = datetime.datetime.now()
 date = now.strftime("%Y-%m-%d")
