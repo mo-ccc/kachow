@@ -22,6 +22,10 @@ def create_app():
     from flask import Flask
     app = Flask(__name__)
     app.config.from_object('config_file.configuration')
+    
+    if app.config["ENV"] == "production":
+        from log_handlers import file_handler
+        app.logger.addHandler(file_handler)
 
     # initialize app using globals
     db.init_app(app)
