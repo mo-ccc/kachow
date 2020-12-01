@@ -3,3 +3,4 @@ __pycache__
 .env
 att_files
 migrations
+log_dir
