@@ -1,5 +1,6 @@
 import os
 import logging
+import logging.handlers as handlers
 import datetime
 
 log_directory = os.path.join(os.getcwd(), 'logs')
@@ -10,7 +11,7 @@ if not os.path.exists(log_directory):
 now = datetime.datetime.now()
 date = now.strftime("%Y-%m-%d")
 
-file_handler = logging.handlers.TimedRotatingFileHandler(
+file_handler = handlers.TimedRotatingFileHandler(
     filename=os.path.join(log_directory, date),
     when='midnight'
 )
