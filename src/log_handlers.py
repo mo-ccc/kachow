@@ -2,10 +2,10 @@ import os
 import logging
 import datetime
 
-log_directory = os.path.join(os.getcwd(), 'log')
+log_directory = os.path.join(os.getcwd(), 'logs')
 
-if not os.path.exists(log_dir):
-    os.mkdir('log_dir')
+if not os.path.exists(log_directory):
+    os.mkdir(log_directory)
     
 now = datetime.datetime.now()
 date = now.strftime("%Y-%m-%d")
